@@ -25,11 +25,20 @@ class LuosimaoAgent extends Agent
 
     public function sendContentSms($to, $content)
     {
-        $url = 'https://sms-api.luosimao.com/v1/send.json';
-        $optData = [
-            'mobile'  => $to,
-            'message' => $content,
-        ];
+        if (strpos($to, ",") === false) {
+            $url = 'https://sms-api.luosimao.com/v1/send.json';
+            $optData = [
+                'mobile'  => $to,
+                'message' => $content,
+            ];
+        } else {
+            $url = 'https://sms-api.luosimao.com/v1/send_batch.json';
+            $optData = [
+                'mobile_list'  => $to,
+                'message' => $content,
+            ];               
+        }
+      
         $data = $this->LuosimaoCurl($url, $optData, $this->apikey);
         $this->setResult($data);
     }
